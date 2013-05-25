@@ -12,7 +12,7 @@ die() {
 
 [ -e "~/.config" ] && die "~/.config already exists."
 
-git clone git@github.com:miiicasa/linux-config.git "$CONFIG_HOME"
+git clone git@github.com:kvzhuang/linux-config.git "$CONFIG_HOME"
 
 cd "$CONFIG_HOME"
 git submodule update --init
