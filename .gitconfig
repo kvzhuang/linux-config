@@ -42,3 +42,6 @@
 
 [push]
         default = tracking
+[user]
+	email = kvzhuang@gmail.com
+	name = Kevin Zhuang
