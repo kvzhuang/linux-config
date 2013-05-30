@@ -17,7 +17,7 @@ unsetopt bgnice autoparamslash
 zmodload -a zsh/stat stat
 zmodload -a zsh/zpty zpty
 zmodload -a zsh/zprof zprof
-zmodload -ap zsh/mapfile mapfile
+# zmodload -ap zsh/mapfile mapfile
 
 TERM=xterm-256color
 HISTFILE=$HOME/.zhistory
@@ -154,8 +154,8 @@ alias cdconf="cd /etc/httpd/conf.d/"
 alias cdphpcs="cd /usr/share/pear/PHP/CodeSniffer";
 alias goconf="cd /etc/httpd/conf.d/"
 alias gophpcs="cd /usr/share/pear/PHP/CodeSniffer";
-alias restart="sudo systemctl restart httpd "
-alias restarta = "sudo service apache2 restart"
+alias restart="sudo systemctl restart httpd ";
+alias restarta="sudo service apache2 restart";
 alias gowww="cd ~/miiicasa/"
 alias cdst="cd ~/miiicasa/static";
 alias cdwww="cd ~/miiicasa/"

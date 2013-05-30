@@ -25,7 +25,7 @@ ln -s .config/.tmux.conf .tmux.conf
 ln -s .config/.gitconfig .gitconfig
 ln -s .config/git_diff_wrapper git_diff_wrapper
 ln -s .config/.git-completion .git-completion
-
+ln -s ~/.config/compass_lite ~/compass_lite
 cd "${CONFIG_HOME}/.vim"
 git submodule update --init
 

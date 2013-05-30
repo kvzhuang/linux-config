@@ -1,0 +1,82 @@
+#!/usr/bin/php
+<?php
+/**
+ * Compass is excellent because it ease the pain of CSS coding.
+ * However, the nature of creating project is the main reason we don't want it.
+ * Because our folder and file structure is very different from what it plans.
+ * This script helps to use the benefits without maintaining a Compass project.
+ *
+ * @author Joseph Chiang <joseph_chiang@miiicasa.com>
+ * @author Kevin Zhuang
+ * @package compass_lite
+ */
+
+set_exception_handler("handle_exception");
+
+function handle_exception($ex)
+{
+    die("Error: ".$ex->getMessage()."\n");
+}
+
+function print_usage()
+{
+    echo "Usage: compass_lite <from_scss_file> <to_css_file>\n" .
+         "\n";
+    exit;
+}
+
+// Remove file name from arguments.
+$path = array_shift($argv);
+
+// No argument, provide usage.
+if ( ! count($argv))
+{
+    print_usage($path);
+    exit;
+}
+
+$from_file = $argv[0];
+$path = realpath($from_file);
+$user = $_SERVER["USER"];
+if (strpos($path, "/miiicasa/dashboard/") !== FALSE)
+{
+    $work_path = "/home/$user/miiicasa/dashboard";
+}
+else if (strpos($path, "/miiitv") !== FALSE)
+{
+    $work_path = "/home/$user/miiitv/static/lib/compass";
+}
+else if (strpos($path, "/miiicloud") !== FALSE)
+{
+    $work_path = "/home/$user/miiicloud/static/lib/compass";
+}
+else if (strpos($path, "/miiicasa") !== FALSE)
+{
+    $work_path = "/home/$user/miiicasa/static/lib/compass";
+}
+$to_file   = $argv[1];
+
+if (empty($from_file) || empty($to_file))
+{
+    throw new Exception("You need provide at least 2 arguments.");
+}
+
+if ( ! file_exists($from_file))
+{
+    throw new Exception("Origin file doesn't exist.");
+}
+
+$paths = pathinfo($from_file);
+$dirname = $paths["dirname"];
+$config_file = "$dirname/../config.rb";
+if ($dirname === "sass" || file_exists($config_file))
+{
+    throw new Exception("Give up because it's a native compass project.");
+}
+
+exec("cp {$from_file} {$work_path}/sass/screen.scss");
+exec("compass compile {$work_path}");
+exec("cp {$work_path}/stylesheets/screen.css {$to_file}");
+exec("rm {$work_path}/sass/screen.scss");
+exec("rm {$work_path}/stylesheets/screen.css");
+echo "CSS Generated - '$to_file'";
