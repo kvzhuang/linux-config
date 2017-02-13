@@ -63,8 +63,8 @@ bindkey '^[[6~' down-line-or-history
 bindkey "^r" history-incremental-search-backward
 bindkey ' ' magic-space    # also do history expansion on space
 bindkey '^I' complete-word # complete on tab, leave expansion to _expand
-bindkey "^[OA" history-search-backward
-bindkey "^[OB" history-search-forward
+bindkey "^[[A" history-search-backward
+bindkey "^[[B" history-search-forward
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -150,7 +150,7 @@ fi
 alias man='LC_ALL=C LANG=C man'
 alias v="vim"
 alias vi="vim"
-alias ls='ls --color=auto '
+#alias ls='ls --color=auto '
 alias ll="ls -la"
 alias cdconf="cd /etc/httpd/conf.d/"
 alias cdphpcs="cd /usr/share/pear/PHP/CodeSniffer";
@@ -178,7 +178,6 @@ export PATH="/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home
 export PATH="/home/dev/${USER}/miiicasa/lib:/home/dev/${USER}/miiicasa/bin:${PATH}"
 export PATH="/opt/flex/bin:/opt/fdbuild:${PATH}"
 export NODE_PATH="/usr/lib/node_modules:${PATH}"
-
 # get the name of the branch we are on
 git_prompt_info() {
       ref=$(git symbolic-ref HEAD 2> /dev/null) || return
@@ -201,3 +200,27 @@ PS1='%{$fg[green]%}%n@%m %{$fg[cyan]%}%~ %{$fg[red]%}$(__git_ps1 "( %s)")%{$rese
 #PS1='%{$fg[green]%}%n@%m %~ %{$fg[red]%}$(__git_ps1 "(%s)")%{$reset_color%} %# '
 #PS1='[%n@%m %c$(__git_ps1 " (%s)")]\$ '
 eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export NODE_PATH=/usr/lib/node_modules:/opt/flex/bin:/opt/fdbuild:/home/dev/kevin.zhuang/miiicasa/lib:/home/dev/kevin.zhuang/miiicasa/bin:/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home/{kevin.zhuang}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/lib/node_modules
+
+lazy_source () {
+    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
+}
+
+ZSH=$HOME/.oh-my-zsh
+
+# zsh-completions
+fpath=(/usr/local/share/zsh-completions $fpath)
+
+export NVM_DIR="/Users/kevin.zhuang/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && lazy_source  "$NVM_DIR/nvm.sh"  # This loads nvm
+[[ -s "$HOME/.avn/bin/avn.sh" ]] && lazy_source  "$HOME/.avn/bin/avn.sh" # load avn
+
+export JAVA_HOME=$(/usr/libexec/java_home)
+export NODE_PATH=$NODE_PATH:/Users/kevin.zhuang/.nvm/versions/node/v4.3.1/lib/node_modules
+cd ~/projects/
+
+export PATH=$PATH:/Users/kevin.zhuang/bin
+
+source '/Users/kevin.zhuang/lib/azure-cli/az.completion'

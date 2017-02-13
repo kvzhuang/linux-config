@@ -12,7 +12,7 @@
 
 [diff]
     color = auto
-    external = /home/$USER/git_diff_wrapper
+    external = /Users/$USER/git_diff_wrapper
 
 [pager]
     diff =
@@ -29,7 +29,7 @@
 
 [branch]
     color = auto
-
+    autosetuprebase = always
 [merge]
     tool = araxismerge
 
@@ -43,5 +43,13 @@
 [push]
         default = tracking
 [user]
-    email = kevin_zhuang@miiicasa.com
+    email = kevin.zhuang@tenmax.io
     name = Kevin Zhuang
+[core]
+    excludesfile = /Users/kevin.zhuang/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
