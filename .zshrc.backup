@@ -40,6 +40,7 @@ RPS1="$PR_MAGENTA(%D{%m-%d %H:%M})$PR_NO_COLOR"
 LC_ALL='en_US.UTF-8'
 LANG='en_US.UTF-8'
 LC_CTYPE=C
+
 if [ $SSH_TTY ]; then
   MUTT_EDITOR=vim
 else
@@ -62,8 +63,8 @@ bindkey '^[[6~' down-line-or-history
 bindkey "^r" history-incremental-search-backward
 bindkey ' ' magic-space    # also do history expansion on space
 bindkey '^I' complete-word # complete on tab, leave expansion to _expand
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
+bindkey "^[OA" history-search-backward
+bindkey "^[OB" history-search-forward
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -149,7 +150,7 @@ fi
 alias man='LC_ALL=C LANG=C man'
 alias v="vim"
 alias vi="vim"
-alias ls='ls -G '
+#alias ls='ls --color=auto '
 alias ll="ls -la"
 alias cdconf="cd /etc/httpd/conf.d/"
 alias cdphpcs="cd /usr/share/pear/PHP/CodeSniffer";
@@ -182,7 +183,8 @@ git_prompt_info() {
       ref=$(git symbolic-ref HEAD 2> /dev/null) || return
             echo "(${ref#refs/heads/})"
 }
-export LSCOLORS="gxfxcxdxcxegedabagacad"
+autoload -U colors
+colors
 setopt prompt_subst
 
 export DEV_ROOT=/home/${USER}/
@@ -218,7 +220,3 @@ export NVM_DIR="/Users/kevin.zhuang/.nvm"
 export JAVA_HOME=$(/usr/libexec/java_home)
 export NODE_PATH=$NODE_PATH:/Users/kevin.zhuang/.nvm/versions/node/v4.3.1/lib/node_modules
 cd ~/projects/
-
-export PATH=$PATH:/Users/kevin.zhuang/bin
-
-source '/Users/kevin.zhuang/lib/azure-cli/az.completion'
