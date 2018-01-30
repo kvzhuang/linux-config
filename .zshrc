@@ -50,20 +50,42 @@ unsetopt ALL_EXPORT
 
 autoload -U compinit
 compinit
-bindkey '\e[1~' beginning-of-line
-bindkey '\e[4~' end-of-line
-bindkey "^?" backward-delete-char
-bindkey '^[OH' beginning-of-line
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
+  zle reset-prompt
+  zle -R
+}
+
+# Ensure that the prompt is redrawn when the terminal size changes.
+TRAPWINCH() {
+  zle &&  zle -R
+}
+
+zle -N zle-keymap-select
+zle -N edit-command-line
+
+
+bindkey -v
+
+# allow v to edit the command line (standard behaviour)
+autoload -Uz edit-command-line
+bindkey -M vicmd 'v' edit-command-line
+
+# allow ctrl-p, ctrl-n for navigate history (standard behaviour)
+bindkey '^P' up-history
+bindkey '^N' down-history
+
+# allow ctrl-h, ctrl-w, ctrl-? for char and word deletion (standard behaviour)
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+
+# allow ctrl-r to perform backward search in history
+bindkey '^r' history-incremental-search-backward
+
+# allow ctrl-a and ctrl-e to move to beginning/end of line
 bindkey '^a' beginning-of-line
-bindkey '^[OF' end-of-line
 bindkey '^e' end-of-line
-bindkey '^[[5~' up-line-or-history
-bindkey '^[[6~' down-line-or-history
-bindkey "^r" history-incremental-search-backward
-bindkey ' ' magic-space    # also do history expansion on space
-bindkey '^I' complete-word # complete on tab, leave expansion to _expand
-bindkey "^[[A" history-search-backward
-bindkey "^[[B" history-search-forward
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -151,24 +173,8 @@ alias v="vim"
 alias vi="vim"
 alias ls='ls -G '
 alias ll="ls -la"
-alias cdconf="cd /etc/httpd/conf.d/"
-alias cdphpcs="cd /usr/share/pear/PHP/CodeSniffer";
-alias goconf="cd /etc/httpd/conf.d/"
-alias gophpcs="cd /usr/share/pear/PHP/CodeSniffer";
-alias restart="sudo systemctl restart httpd ";
-alias restarta="sudo service apache2 restart";
-alias gowww="cd ~/miiicasa/"
-alias cdst="cd ~/miiicasa/static";
-alias cdwww="cd ~/miiicasa/"
-alias gostatic="cd ~/miiicasa/static";
-alias genlang="cd ~/;php ~/miiicasa/cms/cli.php l10n/lang/script_gen;cd -;";
-alias genlang2="cd ~/;php ~/miiicloud/cms/cli.php l10n/lang/script_gen;cd -;";
-alias gendoc="/home/$USER/miiicasa/lib/yuidocjs/lib/cli.js -o ~/public_html/yuidocjs/ .";
-alias parselang="php ~/miiicasa/cms/cli.php l10n/l10n/update_lang_to_db";
-alias parselang2="php ~/miiicloud/cms/cli.php l10n/l10n/update_lang_to_db";
-alias cdbiz="cd ~/miiicloud";
-alias tarimg='tar cvzf static.tar.gz ~/miiicasa/static --exclude="*.swp" --exclude="*.js" --exclude="*.scss" --exclude="*.css" --exclude=".git*" --exclude="*.html" --exclude=".sass-cache" --exclude="lab" --exclude="*.as" --exclude="*.doc" --exclude="yui3" --exclude="yui2" --exclude="soundmanager2" --exclude="apps" --exclude="zeroclipboard" --exclude=yuidoc --exclude=lang --exclude=cmd --exclude=useradmin --exclude=lazyload --exclude="lib" --exclude="cms"';
-alias vpnrestart='sudo /root/bin/vpn-pppssh-61 start';
+alias ads="cd ~/projects/tenmax-ads-web"
+alias ads-api="cd ~/projects/tenmax-ads"
 
 # Environment Variables.
 export TZ="/usr/share/zoneinfo/Asia/Taipei"
@@ -200,7 +206,7 @@ PS1='%{$fg[green]%}%n@%m %{$fg[cyan]%}%~ %{$fg[red]%}$(__git_ps1 "( %s)")%{$rese
 eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export NODE_PATH=/usr/lib/node_modules:/opt/flex/bin:/opt/fdbuild:/home/dev/kevin.zhuang/miiicasa/lib:/home/dev/kevin.zhuang/miiicasa/bin:/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home/{kevin.zhuang}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/lib/node_modules
+export NODE_PATH=/usr/lib/node_modules:/opt/flex/bin:/opt/fdbuild:/home/dev/kevin/miiicasa/lib:/home/dev/kevin/miiicasa/bin:/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home/{kevin}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/lib/node_modules
 
 lazy_source () {
     eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
@@ -211,14 +217,14 @@ ZSH=$HOME/.oh-my-zsh
 # zsh-completions
 fpath=(/usr/local/share/zsh-completions $fpath)
 
-export NVM_DIR="/Users/kevin.zhuang/.nvm"
+export NVM_DIR="/Users/kevin/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && lazy_source  "$NVM_DIR/nvm.sh"  # This loads nvm
-[[ -s "$HOME/.avn/bin/avn.sh" ]] && lazy_source  "$HOME/.avn/bin/avn.sh" # load avn
+[[ -s "$HOME/.avn/bin/avn.sh" ]] && source  "$HOME/.avn/bin/avn.sh" # load avn
 
 export JAVA_HOME=$(/usr/libexec/java_home)
-export NODE_PATH=$NODE_PATH:/Users/kevin.zhuang/.nvm/versions/node/v4.3.1/lib/node_modules
+export NODE_PATH=$NODE_PATH:/Users/kevin/.nvm/versions/node/v4.3.1/lib/node_modules
 cd ~/projects/
 
-export PATH=$PATH:/Users/kevin.zhuang/bin
+export PATH=$PATH:/Users/kevin/bin
 
-source '/Users/kevin.zhuang/lib/azure-cli/az.completion'
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

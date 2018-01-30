@@ -43,13 +43,13 @@
 [push]
         default = tracking
 [user]
-    email = kevin.zhuang@tenmax.io
-    name = Kevin Zhuang
+	email = kevin.zhuang@tenmax.io
+	name = Kevin Zhuang
 [core]
-    excludesfile = /Users/kevin.zhuang/.gitignore_global
+	excludesfile = /Users/kevin/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
