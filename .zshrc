@@ -21,8 +21,8 @@ zmodload -a zsh/zprof zprof
 
 TERM=xterm-256color
 HISTFILE=$HOME/.zhistory
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 HOSTNAME="`hostname`"
 PAGER='less'
 EDITOR='vim'
@@ -82,6 +82,8 @@ bindkey '^w' backward-kill-word
 
 # allow ctrl-r to perform backward search in history
 bindkey '^r' history-incremental-search-backward
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
 
 # allow ctrl-a and ctrl-e to move to beginning/end of line
 bindkey '^a' beginning-of-line
@@ -175,7 +177,14 @@ alias ls='ls -G '
 alias ll="ls -la"
 alias ads="cd ~/projects/tenmax-ads-web"
 alias ads-api="cd ~/projects/tenmax-ads"
+alias pmax="cd ~/projects/tenmax-pmax"
+alias ginger="cd ~/projects/tenmax-ginger"
+alias adclicks="cd ~/projects/tenmax-adclicks"
+alias imax="cd ~/projects/tenmax-imax-web"
 
+
+alias gss="git stash save"
+alias gsp="git stash pop"
 # Environment Variables.
 export TZ="/usr/share/zoneinfo/Asia/Taipei"
 export MAVEN_HOME=/home/m/lib/maven
