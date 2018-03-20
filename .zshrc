@@ -194,10 +194,10 @@ export PATH="/home/dev/${USER}/miiicasa/lib:/home/dev/${USER}/miiicasa/bin:${PAT
 export PATH="/opt/flex/bin:/opt/fdbuild:${PATH}"
 export NODE_PATH="/usr/lib/node_modules:${PATH}"
 # get the name of the branch we are on
-git_prompt_info() {
-      ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-            echo "(${ref#refs/heads/})"
-}
+#git_prompt_info() {
+#      ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+#            echo "(${ref#refs/heads/})"
+#}
 export LSCOLORS="gxfxcxdxcxegedabagacad"
 setopt prompt_subst
 
@@ -224,11 +224,12 @@ lazy_source () {
 
 ZSH=$HOME/.oh-my-zsh
 
+#source ~/.zsh-nvm/zsh-nvm.plugin.zsh
 # zsh-completions
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 export NVM_DIR="/Users/kevin/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && lazy_source  "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && source  "$NVM_DIR/nvm.sh" --no-use  # This loads nvm
 [[ -s "$HOME/.avn/bin/avn.sh" ]] && source  "$HOME/.avn/bin/avn.sh" # load avn
 
 export JAVA_HOME=$(/usr/libexec/java_home)
@@ -253,7 +254,7 @@ YS_VCS_PROMPT_DIRTY=" %{$fg[red]%}x"
 YS_VCS_PROMPT_CLEAN=" %{$fg[green]%}o"
 
 # Git info
-local git_info='$(git_prompt_info)'
+local git_info='$(__git_ps1 "( %s)")'
 ZSH_THEME_GIT_PROMPT_PREFIX="${YS_VCS_PROMPT_PREFIX1}git${YS_VCS_PROMPT_PREFIX2}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$YS_VCS_PROMPT_SUFFIX"
 ZSH_THEME_GIT_PROMPT_DIRTY="$YS_VCS_PROMPT_DIRTY"
@@ -307,3 +308,64 @@ if [ -f '/Users/kevin/projects/google-cloud-sdk/path.zsh.inc' ]; then source '/U
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kevin/projects/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kevin/projects/google-cloud-sdk/completion.zsh.inc'; fi
+
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           npm completion -- "${words[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+    if type __ltrim_colon_completions &>/dev/null; then
+      __ltrim_colon_completions "${words[cword]}"
+    fi
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
