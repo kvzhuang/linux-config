@@ -57,12 +57,12 @@ function zle-keymap-select() {
 }
 
 # Ensure that the prompt is redrawn when the terminal size changes.
-TRAPWINCH() {
-  zle &&  zle -R
-}
+# TRAPWINCH() {
+#   zle &&  zle -R
+# }
 
-zle -N zle-keymap-select
-zle -N edit-command-line
+# zle -N zle-keymap-select
+# zle -N edit-command-line
 
 
 bindkey -v
@@ -100,55 +100,55 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 
 # Completion Styles
 ## list of completers to use
-zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+# zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
 ## allow one error for every three characters typed in approximate completer
-zstyle -e ':completion:*:approximate:*' max-errors \
-    'reply=( $(( ($#PREFIX+$#SUFFIX)/2 )) numeric )'
+# zstyle -e ':completion:*:approximate:*' max-errors \
+    # 'reply=( $(( ($#PREFIX+$#SUFFIX)/2 )) numeric )'
 ## insert all expansions for expand completer
-zstyle ':completion:*:expand:*' tag-order all-expansions
-## formatting and messages
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
-zstyle ':completion:*' group-name ''
-## match uppercase from lowercase
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-## offer indexes before parameters in subscripts
-zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
-## command for process lists, the local web server details and host completion
-## on processes completion complete all user processes
-## zstyle ':completion:*:processes' command 'ps -au$USER'
-## add colors to processes for kill completion
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:*:kill:*:processes' command 'ps --forest -A -o pid,user,cmd'
-zstyle ':completion:*:processes-names' command 'ps axho command'
-## All /etc/hosts hostnames are in autocomplete
-zstyle ':completion:*' hosts $(awk '/^[^#]/ {print $2 $3" "$4" "$5}' /etc/hosts | grep -v ip6- && grep "^#%" /etc/hosts | awk -F% '{print $2}')
-## Filename suffixes to ignore during completion (except after rm command)
-zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
-    '*?.old' '*?.pro'
-## ignore completion functions (until the _ignored completer)
-zstyle ':completion:*:functions' ignored-patterns '_*'
-zstyle ':completion:*:*:*:users' ignored-patterns \
-        adm apache bin daemon games gdm halt ident junkbust lp mail mailnull \
-        named news nfsnobody nobody nscd ntp operator pcap postgres radvd \
-        rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs avahi-autoipd\
-        avahi backup messagebus beagleindex debian-tor dhcp dnsmasq fetchmail\
-        firebird gnats haldaemon hplip irc klog list man cupsys postfix\
-        proxy syslog www-data mldonkey sys snort
+# zstyle ':completion:*:expand:*' tag-order all-expansions
+# ## formatting and messages
+# zstyle ':completion:*' verbose yes
+# zstyle ':completion:*:descriptions' format '%B%d%b'
+# zstyle ':completion:*:messages' format '%d'
+# zstyle ':completion:*:warnings' format 'No matches for: %d'
+# zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+# zstyle ':completion:*' group-name ''
+# ## match uppercase from lowercase
+# zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# ## offer indexes before parameters in subscripts
+# zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+# ## command for process lists, the local web server details and host completion
+# ## on processes completion complete all user processes
+# ## zstyle ':completion:*:processes' command 'ps -au$USER'
+# ## add colors to processes for kill completion
+# zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+# zstyle ':completion:*:*:kill:*:processes' command 'ps --forest -A -o pid,user,cmd'
+# zstyle ':completion:*:processes-names' command 'ps axho command'
+# ## All /etc/hosts hostnames are in autocomplete
+# zstyle ':completion:*' hosts $(awk '/^[^#]/ {print $2 $3" "$4" "$5}' /etc/hosts | grep -v ip6- && grep "^#%" /etc/hosts | awk -F% '{print $2}')
+# ## Filename suffixes to ignore during completion (except after rm command)
+# zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
+#     '*?.old' '*?.pro'
+# ## ignore completion functions (until the _ignored completer)
+# zstyle ':completion:*:functions' ignored-patterns '_*'
+# zstyle ':completion:*:*:*:users' ignored-patterns \
+#         adm apache bin daemon games gdm halt ident junkbust lp mail mailnull \
+#         named news nfsnobody nobody nscd ntp operator pcap postgres radvd \
+#         rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs avahi-autoipd\
+#         avahi backup messagebus beagleindex debian-tor dhcp dnsmasq fetchmail\
+#         firebird gnats haldaemon hplip irc klog list man cupsys postfix\
+#         proxy syslog www-data mldonkey sys snort
 
-# SSH Completion
-zstyle ':completion:*:scp:*' tag-order \
-   files users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
-zstyle ':completion:*:scp:*' group-order \
-   files all-files users hosts-domain hosts-host hosts-ipaddr
-zstyle ':completion:*:ssh:*' tag-order \
-   users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
-zstyle ':completion:*:ssh:*' group-order \
-   hosts-domain hosts-host users hosts-ipaddr
-zstyle '*' single-ignored show
+# # SSH Completion
+# zstyle ':completion:*:scp:*' tag-order \
+#    files users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
+# zstyle ':completion:*:scp:*' group-order \
+#    files all-files users hosts-domain hosts-host hosts-ipaddr
+# zstyle ':completion:*:ssh:*' tag-order \
+#    users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
+# zstyle ':completion:*:ssh:*' group-order \
+#    hosts-domain hosts-host users hosts-ipaddr
+# zstyle '*' single-ignored show
 
 # Start SSH agent.
 SSH_ENV="$HOME/.ssh/environment"
@@ -190,7 +190,6 @@ alias gsp="git stash pop"
 export TZ="/usr/share/zoneinfo/Asia/Taipei"
 export MAVEN_HOME=/home/m/lib/maven
 export PATH="/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home/{$USER}/bin:${PATH}"
-export PATH="/home/dev/${USER}/miiicasa/lib:/home/dev/${USER}/miiicasa/bin:${PATH}"
 export PATH="/opt/flex/bin:/opt/fdbuild:${PATH}"
 export NODE_PATH="/usr/lib/node_modules:${PATH}"
 # get the name of the branch we are on
@@ -199,7 +198,7 @@ export NODE_PATH="/usr/lib/node_modules:${PATH}"
 #            echo "(${ref#refs/heads/})"
 #}
 export LSCOLORS="gxfxcxdxcxegedabagacad"
-setopt prompt_subst
+ setopt prompt_subst
 
 export DEV_ROOT=/home/${USER}/
 # export DEV_PORT=<YOUR DEV_PORT>
@@ -209,36 +208,27 @@ source ~/.git-completion
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
-PS1='%{$fg[green]%}%n@%m %{$fg[cyan]%}%~ %{$fg[red]%}$(__git_ps1 "( %s)")%{$reset_color%}
-% > '
+# PS1='%{$fg[green]%}%n@%m %{$fg[cyan]%}%~ %{$fg[red]%}$(__git_ps1 "( %s)")%{$reset_color%}
+# % > '
 #PS1='%{$fg[green]%}%n@%m %~ %{$fg[red]%}$(__git_ps1 "(%s)")%{$reset_color%} %# '
 #PS1='[%n@%m %c$(__git_ps1 " (%s)")]\$ '
 eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export NODE_PATH=/usr/lib/node_modules:/opt/flex/bin:/opt/fdbuild:/home/dev/kevin/miiicasa/lib:/home/dev/kevin/miiicasa/bin:/usr/local/bin:/usr/local/sbin/:/bin:/sbin:/usr/bin:/usr/sbin:/home/{kevin}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/lib/node_modules
 
-lazy_source () {
-    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
-}
-
-ZSH=$HOME/.oh-my-zsh
+# ZSH=$HOME/.oh-my-zsh
 
 #source ~/.zsh-nvm/zsh-nvm.plugin.zsh
 # zsh-completions
-fpath=(/usr/local/share/zsh-completions $fpath)
+# fpath=(/usr/local/share/zsh-completions $fpath)
 
-export NVM_DIR="/Users/kevin/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source  "$NVM_DIR/nvm.sh" --no-use  # This loads nvm
-[[ -s "$HOME/.avn/bin/avn.sh" ]] && source  "$HOME/.avn/bin/avn.sh" # load avn
 
 export JAVA_HOME=$(/usr/libexec/java_home)
-export NODE_PATH=$NODE_PATH:/Users/kevin/.nvm/versions/node/v4.3.1/lib/node_modules
+# export NODE_PATH=$NODE_PATH:/Users/kevin/.nvm/versions/node/v4.3.1/lib/node_modules
 cd ~/projects/
 
-export PATH=$PATH:/Users/kevin/bin
+# export PATH=$PATH:/Users/kevin/bin
 
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # Clean, simple, compatible and meaningful.
 # Tested on Linux, Unix and Windows under ANSI colors.
 # It is recommended to use with a dark background.
@@ -279,12 +269,12 @@ ys_hg_prompt_info() {
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
 # Prompt format:
-#
+
 # PRIVILEGES USER @ MACHINE in DIRECTORY on git:BRANCH STATE [TIME] C:LAST_EXIT_CODE
 # $ COMMAND
-#
+
 # For example:
-#
+
 # % ys @ ys-mbp in ~/.oh-my-zsh on git:master x [21:47:42] C:0
 # $
 PROMPT="
@@ -300,22 +290,19 @@ ${git_info}\
 %{$fg[white]%}[%D %*] $exit_code
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
 
-# OPAM configuration
-. /Users/kevin/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/kevin/projects/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/kevin/projects/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kevin/projects/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kevin/projects/google-cloud-sdk/completion.zsh.inc'; fi
 
-###-begin-npm-completion-###
-#
+##-begin-npm-completion-###
+
 # npm command completion script
-#
+
 # Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
 # Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
-#
+
 
 if type complete &>/dev/null; then
   _npm_completion () {
@@ -368,4 +355,8 @@ elif type compctl &>/dev/null; then
   }
   compctl -K _npm_completion npm
 fi
-###-end-npm-completion-###
+##-end-npm-completion-###
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
