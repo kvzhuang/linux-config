@@ -46,8 +46,7 @@
     email = kevin.zhuang@tenmax.io
     name = Kevin Zhuang
 [core]
-    excludesfile = /Users/kevin/.gitignore_global
-    commentChar = "*"
+    excludesfile = /Users/kevin.zhuang/.gitignore_global
 [difftool "sourcetree"]
     cmd = opendiff \"$LOCAL\" \"$REMOTE\"
     path =

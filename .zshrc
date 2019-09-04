@@ -13,6 +13,7 @@ setopt   autoresume histignoredups pushdsilent
 setopt   autopushd pushdminus extendedglob rcquotes mailwarning
 unsetopt bgnice autoparamslash
 
+
 # Autoload zsh modules when they are referenced.
 zmodload -a zsh/stat stat
 zmodload -a zsh/zpty zpty
@@ -178,9 +179,7 @@ alias ls='ls -G '
 alias ll="ls -la"
 alias ads="cd ~/projects/tenmax-ads-web"
 alias ads-api="cd ~/projects/tenmax-ads"
-alias pmax="cd ~/projects/tenmax-pmax"
-alias ginger="cd ~/projects/tenmax-ginger"
-alias adclicks="cd ~/projects/tenmax-adclicks"
+alias adcode="cd ~/projects/ads-adcode"
 alias imax="cd ~/projects/tenmax-imax-web"
 
 
@@ -221,6 +220,7 @@ eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 # zsh-completions
 # fpath=(/usr/local/share/zsh-completions $fpath)
 
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 # export NODE_PATH=$NODE_PATH:/Users/kevin/.nvm/versions/node/v4.3.1/lib/node_modules
