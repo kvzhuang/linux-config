@@ -5,7 +5,6 @@ setopt EXTENDED_HISTORY
 setopt MENUCOMPLETE
 setopt ALL_EXPORT
 unsetopt BG_NICE
-
 # Set/unset shell options.
 setopt   notify globdots correct pushdtohome cdablevars autolist
 setopt   correctall autocd recexact longlistjobs
@@ -180,11 +179,15 @@ alias ll="ls -la"
 alias ads="cd ~/projects/tenmax-ads-web"
 alias ads-api="cd ~/projects/tenmax-ads"
 alias adcode="cd ~/projects/ads-adcode"
-alias imax="cd ~/projects/tenmax-imax-web"
 
 
 alias gss="git stash save"
 alias gsp="git stash pop"
+
+source <(kubectl completion zsh)
+alias k=kubectl
+complete -F __start_kubectl k
+
 # Environment Variables.
 export TZ="/usr/share/zoneinfo/Asia/Taipei"
 export MAVEN_HOME=/home/m/lib/maven
@@ -197,7 +200,7 @@ export NODE_PATH="/usr/lib/node_modules:${PATH}"
 #            echo "(${ref#refs/heads/})"
 #}
 export LSCOLORS="gxfxcxdxcxegedabagacad"
- setopt prompt_subst
+setopt prompt_subst
 
 export DEV_ROOT=/home/${USER}/
 # export DEV_PORT=<YOUR DEV_PORT>
@@ -214,7 +217,7 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
 
-# ZSH=$HOME/.oh-my-zsh
+ZSH=$HOME/.oh-my-zsh
 
 #source ~/.zsh-nvm/zsh-nvm.plugin.zsh
 # zsh-completions
@@ -250,21 +253,6 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="$YS_VCS_PROMPT_SUFFIX"
 ZSH_THEME_GIT_PROMPT_DIRTY="$YS_VCS_PROMPT_DIRTY"
 ZSH_THEME_GIT_PROMPT_CLEAN="$YS_VCS_PROMPT_CLEAN"
 
-# HG info
-local hg_info='$(ys_hg_prompt_info)'
-ys_hg_prompt_info() {
-    # make sure this is a hg dir
-    if [ -d '.hg' ]; then
-        echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
-        echo -n $(hg branch 2>/dev/null)
-        if [ -n "$(hg status 2>/dev/null)" ]; then
-            echo -n "$YS_VCS_PROMPT_DIRTY"
-        else
-            echo -n "$YS_VCS_PROMPT_CLEAN"
-        fi
-        echo -n "$YS_VCS_PROMPT_SUFFIX"
-    fi
-}
 
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
@@ -284,7 +272,6 @@ PROMPT="
 %{$fg[green]%}%m \
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
-${hg_info}\
 ${git_info}\
  \
 %{$fg[white]%}[%D %*] $exit_code
@@ -360,3 +347,6 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
+
+export ZSH="/Users/kevin.zhuang/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
