@@ -1,3 +1,12 @@
 configstore
 htop
 gcloud
+.env
+settings.local.json
+gh/
+git/
+github-copilot/
+iterm2/
+jgit/
+yarn/
+.p10k.zsh

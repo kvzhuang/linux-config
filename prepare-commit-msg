@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# 讀取 .env 檔案
+ENV_FILE="$HOME/.config/.env"
+if [ -f "$ENV_FILE" ]; then
+    export $(grep -v '^#' "$ENV_FILE" | xargs)
+fi
+
+# 取得 commit message 的檔案路徑和 commit 類型
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+# 如果是 merge commit，則跳過自動生成
+if [ "$COMMIT_SOURCE" = "merge" ]; then
+    exit 0
+fi
+
+# 取得變更的檔案列表
+CHANGED_FILES=$(git diff --cached --name-only)
+
+# 如果沒有變更，則退出
+if [ -z "$CHANGED_FILES" ]; then
+    exit 0
+fi
+
+# 構建包含檔案及其變更內容的字符串
+CHANGE_DETAILS=""
+
+for FILE in $CHANGED_FILES; do
+    # 獲取檔案的變更內容
+    FILE_DIFF=$(git --no-pager diff --no-ext-diff --cached "$FILE")
+    CHANGE_DETAILS+="檔案: $FILE\n變更內容:\n$FILE_DIFF\n\n"
+done
+
+# 使用 base64 編碼整個變更內容（兼容 macOS 和 Linux）
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS version
+    CHANGE_DETAILS_BASE64=$(echo "$CHANGE_DETAILS" | base64)
+else
+    # Linux version
+    CHANGE_DETAILS_BASE64=$(echo "$CHANGE_DETAILS" | base64 -w 0)
+fi
+
+# 構建提示訊息
+PROMPT="請根據以下 base64 編碼的 git diff 內容，生成一個清晰簡潔的 commit message。請先解碼內容：$CHANGE_DETAILS_BASE64 只需要 commit message 不需要印出解碼後內容"
+
+# 對提示訊息進行 JSON 轉義
+PROMPT_ESCAPED=$(echo "$PROMPT" | jq -Rs .)
+
+# 使用 AI 生成 commit 訊息
+AI_COMMIT_MESSAGE=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "{
+    \"model\": \"gpt-4o\",
+    \"messages\": [
+      {\"role\": \"system\", \"content\": \"你是一個 Git Commit Message 生成助手。請先將收到的 base64 內容解碼，然後根據解碼後的 git diff 內容生成一個清晰、準確且簡潔的 commit message。commit message 應該遵循最佳實踐：以動詞開頭，使用現在式，簡明扼要地描述變更內容。不需要印出 git commit 資訊，只需要 commit message 不需要印出額外交談資訊\"},
+      {\"role\": \"user\", \"content\": ${PROMPT_ESCAPED}}
+    ],
+    \"max_tokens\": 200,
+    \"temperature\": 0.7
+  }")
+
+# 輸出 API 響應以供調試
+echo "API Response: $AI_COMMIT_MESSAGE"
+
+# 解析 AI 生成的訊息並去掉前後的雙引號
+AI_COMMIT_MESSAGE_FINAL=$(echo "$AI_COMMIT_MESSAGE" | jq -r '.choices[0].message.content' | sed 's/^"\(.*\)"$/\1/')
+echo "Final Message: $AI_COMMIT_MESSAGE_FINAL"
+
+# 將 AI 生成的訊息寫入 commit message 文件
+#echo -e "$AI_COMMIT_MESSAGE_FINAL" >> "$COMMIT_MSG_FILE"
+if [ -f "$COMMIT_MSG_FILE" ]; then
+    # 讀取原有的內容
+    ORIGINAL_CONTENT=$(cat "$COMMIT_MSG_FILE")
+    # 創建新的內容（AI 訊息在前）
+    echo -e "[] $AI_COMMIT_MESSAGE_FINAL\n$ORIGINAL_CONTENT" > "$COMMIT_MSG_FILE"
+else
+    # 如果文件不存在，直接創建
+    echo -e "[] $AI_COMMIT_MESSAGE_FINAL" > "$COMMIT_MSG_FILE"
+fi

@@ -1,18 +1,19 @@
 [alias]
     st = status
     br = branch
-    rb = svn rebase
     ci = commit
     co = checkout
+    cp = cherry-pick
     sub = submodule
     oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
     branchdiff = !sh -c \"git diff `git oldest-ancestor`..\"
     branchlog = !sh -c \"git log `git oldest-ancestor`..\"
     diverges = !zsh -c 'git rev-list --boundary $1...$2 | grep ^- | cut -c2-'
-
+    nah = "!f(){ git reset --hard; git clean -df; if [ -d ".git/rebase-apply" ] || [ -d ".git/rebase-merge" ]; then git rebase --abort; fi; }; f"
 [diff]
     color = auto
     external = /Users/$USER/git_diff_wrapper
+	tool = vimdiff
 
 [pager]
     diff =
@@ -47,11 +48,15 @@
     name = Kevin Zhuang
 [core]
     excludesfile = /Users/kevin.zhuang/.gitignore_global
+	editor = vim
+	pager = cat
 [difftool "sourcetree"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-    path =
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 [mergetool "sourcetree"]
-    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 [pull]
     rebase = true
+[fetch]
+    prune = true
